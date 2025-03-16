@@ -8,14 +8,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/add-student', function () {
-    $student = new Student();
-    $student->name = 'Juan Pérez';
-    $student->age = 20;
-    $student->email = 'juan@example.com';
-    //$student->save();
-
-    return "Estudiante agregado correctamente";
-});
+Route::get('/add-student', [StudentController::class, 'showForm']);
+Route::post('/add-student', [StudentController::class, 'store']);
 
 Route::get('/list-student', [StudentController::class, 'index']);

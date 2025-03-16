@@ -12,4 +12,27 @@ class StudentController extends Controller
         $students = Student::all();
         return view('listado', ['students' => $students]);
     }
+
+
+    public function showForm()
+    {
+        return view('add-student');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'age' => 'required|integer|min:1',
+            'email' => 'required|email|unique:students,email',
+        ]);
+
+        $student = new Student();
+        $student->name = $request->input('name');
+        $student->age = $request->input('age');
+        $student->email = $request->input('email');
+        $student->save();
+
+        return redirect('/add-student')->with('success', 'Estudiante agregado correctamente');
+    }
 }
