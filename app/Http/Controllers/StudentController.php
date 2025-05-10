@@ -7,13 +7,14 @@ use App\Models\Student;
 
 class StudentController extends Controller
 {
+    // Pagina de listado de estudiantes
     public function index()
     {
         $students = Student::all();
         return view('listado', ['students' => $students]);
     }
 
-
+    // Pagina de agregar estudiantes
     public function showForm()
     {
         return view('add-student');
