@@ -45,6 +45,11 @@
             <p>Debes iniciar sesión para ver esto.</p>
         @endguest
 
+        <div class="mb-4 text-end">
+    <a href="{{ route('products.create') }}" class="btn btn-primary">
+        Añadir producto
+    </a>
+</div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             @foreach ($products as $product)

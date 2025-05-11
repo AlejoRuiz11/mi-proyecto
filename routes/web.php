@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/list-student', [StudentController::class, 'index']);
 
-Route::get('/productos', [ProductController::class, 'index']);
+Route::get('/productos', [ProductController::class, 'index'])->name('products.index');;
 
 Route::get('/productos/crear', [ProductController::class, 'create'])->name('products.create');
 Route::post('/productos', [ProductController::class, 'store'])->name('products.store');
@@ -34,5 +34,10 @@ Route::delete('/productos/{id}', [ProductController::class, 'destroy'])->name('p
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::get('/productos/cancelar', function () {
+    return redirect()->route('products.index');
+})->name('products.cancelar');
+
 
 require __DIR__.'/auth.php';

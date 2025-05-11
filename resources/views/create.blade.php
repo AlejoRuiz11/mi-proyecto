@@ -17,4 +17,8 @@
     <input type="file" name="image">
 
     <button type="submit">Guardar producto</button>
+    
+    <a href="{{ route('products.cancelar') }}" class="btn btn-danger">
+        Cancelar
+    </a>
 </form>
