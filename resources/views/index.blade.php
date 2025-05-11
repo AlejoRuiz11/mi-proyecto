@@ -28,7 +28,7 @@
             </div>
         </div>
     </nav>
-
+    
     <!-- Contenido -->
     <div class="container mt-4">
         @if(session('success'))
@@ -36,6 +36,15 @@
                 {{ session('success') }}
             </div>
         @endif
+        
+        @auth
+            <p>Bienvenido, {{ Auth::user()->name }}!</p>
+        @endauth
+
+        @guest
+            <p>Debes iniciar sesión para ver esto.</p>
+        @endguest
+
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             @foreach ($products as $product)
