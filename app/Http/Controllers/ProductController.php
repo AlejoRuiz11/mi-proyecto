@@ -15,6 +15,11 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        // Validar que solo admin pueda crear (por si alguien hace POST directo)
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'No tienes permiso para crear productos.');
+        }
+
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
@@ -38,17 +43,30 @@ class ProductController extends Controller
 
         return redirect('/productos');
     }
-    // app/Http/Controllers/ProductController.php
 
     public function create()
     {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'No tienes permiso para acceder a esta página.');
+        }
+
         return view('create');
     }
 
+
     public function destroy($id)
     {
+        // Solo admin puede eliminar
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'No tienes permiso para eliminar productos.');
+        }
+
         $product = Product::findOrFail($id);
-        
+
         // Borra la imagen si existe
         if ($product->image && \Storage::disk('public')->exists($product->image)) {
             \Storage::disk('public')->delete($product->image);
@@ -58,6 +76,4 @@ class ProductController extends Controller
 
         return redirect('/productos')->with('success', 'Producto eliminado');
     }
-
-
 }

@@ -8,7 +8,7 @@ use App\Http\Controllers\StudentController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('products.index');
 });
 
 Route::get('/dashboard', function () {
@@ -38,6 +38,13 @@ Route::get('/dashboard', function () {
 Route::get('/productos/cancelar', function () {
     return redirect()->route('products.index');
 })->name('products.cancelar');
+
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', function () {
+        return 'Welcome Admin';
+    });
+});
 
 
 require __DIR__.'/auth.php';
