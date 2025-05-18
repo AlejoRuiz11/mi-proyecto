@@ -121,54 +121,62 @@
         </div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-            @foreach ($products as $product)
-                <div class="col">
-                    <div class="card h-100">
-                        @if ($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                        @endif
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ $product->name }}</h5>
-                            <p class="card-text">{{ $product->description }}</p>
-                            <p class="fw-bold">${{ $product->price }}</p>
-                            <p>Stock: {{ $product->stock }}</p>
-                            
-                            @auth
-                                @if(Auth::user()->role === 'admin')
-                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="mt-auto">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
-                                            Eliminar
-                                        </button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success btn-sm w-100">
-                                            Añadir al carrito
-                                        </button>
-                                    </form>
-                                @endif
-                            @endauth
+          @foreach ($products as $product)
+              @php
+                  $isOutOfStock = $product->stock <= 0;
+              @endphp
+              <div class="col">
+                  <div class="card h-100">
+                      @if ($product->image)
+                          <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                      @endif
+                      <div class="card-body d-flex flex-column">
+                          <h5 class="card-title">{{ $product->name }}</h5>
+                          <p class="card-text">{{ $product->description }}</p>
+                          <p class="fw-bold">${{ $product->price }}</p>
+                          <p>Stock: {{ $product->stock }}</p>
 
-                            @guest
-                                <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success btn-sm w-100">
-                                        Añadir al carrito
-                                    </button>
-                                </form>
-                            @endguest
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+                          @auth
+                              @if(Auth::user()->role === 'admin')
+                                  <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm mb-2 w-100">
+                                      Editar
+                                  </a>
+
+                                  <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="mt-auto">
+                                      @csrf
+                                      @method('DELETE')
+                                      <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
+                                          Eliminar
+                                      </button>
+                                  </form>
+                              @else
+                                  <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
+                                      @csrf
+                                      <button type="submit" class="btn btn-success btn-sm w-100" @if($isOutOfStock) disabled style="background-color: grey; border-color: grey; cursor: not-allowed;" @endif>
+                                          Añadir al carrito
+                                      </button>
+                                  </form>
+                              @endif
+                          @endauth
+
+                          @guest
+                              <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
+                                  @csrf
+                                  <button type="submit" class="btn btn-success btn-sm w-100" @if($isOutOfStock) disabled style="background-color: grey; border-color: grey; cursor: not-allowed;" @endif>
+                                      Añadir al carrito
+                                  </button>
+                              </form>
+                          @endguest
+                      </div>
+                  </div>
+              </div>
+          @endforeach
+      </div>
+
     </div>
 
     <footer class="d-flex flex-wrap justify-content-between align-items-center pt-3 mt-4 border-top">
-      <p class="col-md-4 mb-4 mx-3 text-center" style="color: rgb(34, 34, 34);"> © 2024 Alejandro Ruiz</p>
+      <p class="col-md-4 mb-4 mx-3 text-center" style="color: rgb(34, 34, 34);"> © 2025 Alejandro Ruiz</p>
 
       <ul class="nav col-md-4 mb-4 mx-3 justify-content-center">
         <li class="nav-item">

@@ -8,6 +8,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
@@ -96,6 +101,20 @@
         @else
             <div class="alert alert-info mt-4">El carrito está vacío</div>
         @endif
+        
+        @php
+            $hayProductos = count($cart) > 0;
+        @endphp
+
+        <form action="{{ route('checkout') }}" method="GET">
+            <button type="submit"
+                class="btn w-100 mt-4 {{ $hayProductos ? 'btn-success' : 'btn-secondary disabled' }}"
+                {{ $hayProductos ? '' : 'disabled' }}
+                style="{{ $hayProductos ? '' : 'pointer-events: none; cursor: default;' }}">
+                Pagar
+            </button>
+        </form>
+
     </div>
 
     <!-- Bootstrap JS (opcional si usás cosas como collapses) -->

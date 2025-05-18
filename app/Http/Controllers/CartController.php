@@ -13,6 +13,37 @@ class CartController extends Controller
         return view('cart', compact('cart'));
     }
 
+    public function checkout()
+    {
+        $cart = session()->get('cart', []);
+
+        if (empty($cart)) {
+            return redirect()->route('cart.index')->with('error', 'El carrito está vacío.');
+        }
+
+        foreach ($cart as $id => $item) {
+            $product = Product::find($id);
+
+            if (!$product) {
+                return redirect()->route('cart.index')->with('error', 'Uno de los productos no existe.');
+            }
+
+            if ($product->stock < $item['quantity']) {
+                return redirect()->route('cart.index')->with('error', "No hay suficiente stock para el producto: {$product->name}");
+            }
+
+            // Descontar stock
+            $product->stock -= $item['quantity'];
+            $product->save();
+        }
+
+        // Limpiar carrito
+        session()->forget('cart');
+
+        return view('purchase'); // Vista de gracias por tu compra
+    }
+
+
     public function add(Product $producto)
     {
         $cart = session()->get('cart', []);

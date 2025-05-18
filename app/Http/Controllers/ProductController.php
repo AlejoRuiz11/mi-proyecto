@@ -76,4 +76,55 @@ class ProductController extends Controller
 
         return redirect('/productos')->with('success', 'Producto eliminado');
     }
+
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Opcional: verificar que sea admin (además de middleware)
+        if(auth()->user()->role !== 'admin') {
+            abort(403);
+        }
+
+        return view('edit', compact('product'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        if(auth()->user()->role !== 'admin') {
+            abort(403);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'image' => 'nullable|image|max:2048', // max 2MB
+        ]);
+
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->stock = $request->stock;
+
+        if ($request->hasFile('image')) {
+            // Eliminar imagen vieja si existe
+            if ($product->image) {
+                Storage::delete('public/' . $product->image);
+            }
+
+            $path = $request->file('image')->store('products', 'public');
+            $product->image = $path;
+        }
+
+        $product->save();
+
+        return redirect()->route('products.index')->with('success', 'Producto actualizado correctamente.');
+    }
+
+
+
 }

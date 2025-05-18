@@ -19,12 +19,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+    
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+});
 
 Route::get('/list-student', [StudentController::class, 'index']);
 
-Route::get('/productos', [ProductController::class, 'index'])->name('products.index');;
+Route::get('/productos', [ProductController::class, 'index'])->name('products.index');
 
 Route::get('/productos/crear', [ProductController::class, 'create'])->name('products.create');
 Route::post('/productos', [ProductController::class, 'store'])->name('products.store');
@@ -44,7 +48,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', function () {
         return 'Welcome Admin';
     });
+
 });
+
+
 
 Route::get('/carrito', [CartController::class, 'index'])->name('cart.index');
 Route::post('/carrito/agregar/{producto}', [CartController::class, 'add'])->name('cart.add');
