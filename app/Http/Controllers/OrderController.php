@@ -10,6 +10,19 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        if (auth()->user()->role === 'admin') {
+            $orders = Order::with('items')->orderByDesc('created_at')->get();
+        }
+        else {
+        $orders = Order::with('items')
+            ->where('user_id', Auth::id())
+            ->orderByDesc('created_at')
+            ->get();
+    }
+        return view('orders', compact('orders'));
+    }
 
     public function create()
     {

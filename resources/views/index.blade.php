@@ -29,6 +29,7 @@
                         <a href="{{ route('cart.index') }}" class="btn btn-outline-dark btn-sm">Carrito</a>
                         @auth
                             <a href="{{ route('profile.edit') }}" class="btn btn-outline-dark btn-sm">Perfil</a>
+                            <a href="{{ route('orders.index') }}" class="btn btn-outline-dark btn-sm">Pedidos</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-dark btn-sm">Cerrar sesión</button>
