@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
+
+
 class CartController extends Controller
 {
     public function index()
@@ -37,11 +39,10 @@ class CartController extends Controller
             $product->save();
         }
 
-        // Limpiar carrito
-        session()->forget('cart');
-
-        return view('purchase'); // Vista de gracias por tu compra
+        // Redirigir al OrderController para crear la orden
+        return redirect()->route('orders.create');
     }
+
 
 
     public function add(Product $producto)

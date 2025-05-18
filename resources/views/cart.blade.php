@@ -106,7 +106,8 @@
             $hayProductos = count($cart) > 0;
         @endphp
 
-        <form action="{{ route('checkout') }}" method="GET">
+        <form action="{{ route('checkout') }}" method="POST">
+            @csrf            
             <button type="submit"
                 class="btn w-100 mt-4 {{ $hayProductos ? 'btn-success' : 'btn-secondary disabled' }}"
                 {{ $hayProductos ? '' : 'disabled' }}
