@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StudentController;
-
+use App\Http\Controllers\CartController;
 
 
 Route::get('/', function () {
@@ -45,6 +45,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return 'Welcome Admin';
     });
 });
+
+Route::get('/carrito', [CartController::class, 'index'])->name('cart.index');
+Route::post('/carrito/agregar/{producto}', [CartController::class, 'add'])->name('cart.add');
+Route::post('/carrito/eliminar/{producto}', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/carrito/actualizar/{producto}', [CartController::class, 'update'])->name('cart.update');
+
 
 
 require __DIR__.'/auth.php';

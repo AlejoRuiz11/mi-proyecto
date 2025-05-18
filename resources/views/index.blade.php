@@ -13,39 +13,87 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">VirtualShopping</a>
-            <div class="collapse navbar-collapse justify-content-end">
+            <a class="navbar-brand fw-bold" href="{{ route('products.index') }}">VirtualShopping</a>
+
+            <!-- Botón hamburguesa -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Contenido colapsable -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
                 @if (Route::has('login'))
-                <nav class="flex items-center justify-end gap-4">
-                    @auth
-                    <a href="{{ route('profile.edit') }}" class="btn btn-outline-dark btn-sm">
-                        Perfil
-                    </a>
-
-                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-dark btn-sm">
-                            Cerrar sesión
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">
-                        Log in
-                    </a>
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn btn-outline-secondary btn-sm">
-                            Register
-                        </a>
-                    @endif
-                @endauth
-
-                </nav>
-            @endif
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        
+                        <a href="{{ route('cart.index') }}" class="btn btn-outline-dark btn-sm">Carrito</a>
+                        @auth
+                            <a href="{{ route('profile.edit') }}" class="btn btn-outline-dark btn-sm">Perfil</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-dark btn-sm">Cerrar sesión</button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-outline-dark btn-sm">Log in</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="btn btn-outline-dark btn-sm">Register</a>
+                            @endif
+                        @endauth
+                    </div>
+                @endif
             </div>
         </div>
     </nav>
     
+    <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" aria-label="Slide 1" class="active" ></button>
+          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class="" ></button>
+          <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="storage/Images/pcgamer2.jpg" class="d-block w-100"style="width: 100%; height: 100%;">
+            <div class="container">
+              <div class="carousel-caption text-start carouselTexto">
+                <h1>Tu Entretenimiento en Alta Definición</h1>
+                <p class="opacity-75">Vive una experiencia visual envolvente con nuestras pantallas y equipos para el hogar.</p>                
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="storage/Images/pcgamer.jpg" class="d-block w-100"style="width: 100%; height: 100%;">
+            <div class="container">
+              <div class="carousel-caption text-start carouselTexto">
+                <h1 >Rendimiento que Impulsa tus Ideas</h1>
+                <p>Explora nuestras PCs de alto rendimiento diseñadas para gamers, creadores y profesionales exigentes.</p>
+                
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="storage/Images/phones.jpg" class="d-block w-100" style="width: 100%; height: 100%;">
+            <div class="container">
+              <div class="carousel-caption text-end">
+                <h1>Conectado a lo Importante</h1>
+                <p>Descubre los últimos modelos de smartphones y mantente siempre cerca de lo que más te importa.</p>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+
+
     <!-- Contenido -->
     <div class="container mt-4">
         @if(session('success'))
@@ -83,6 +131,7 @@
                             <h5 class="card-title">{{ $product->name }}</h5>
                             <p class="card-text">{{ $product->description }}</p>
                             <p class="fw-bold">${{ $product->price }}</p>
+                            <p>Stock: {{ $product->stock }}</p>
                             
                             @auth
                                 @if(Auth::user()->role === 'admin')
@@ -93,8 +142,24 @@
                                             Eliminar
                                         </button>
                                     </form>
+                                @else
+                                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm w-100">
+                                            Añadir al carrito
+                                        </button>
+                                    </form>
                                 @endif
                             @endauth
+
+                            @guest
+                                <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-auto">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                        Añadir al carrito
+                                    </button>
+                                </form>
+                            @endguest
                         </div>
                     </div>
                 </div>
@@ -121,5 +186,7 @@
       </ul>
     </footer>
 
+    <!-- Bootstrap JS (opcional si usás cosas como collapses) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
