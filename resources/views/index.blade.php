@@ -107,10 +107,6 @@
             <p>Bienvenido, {{ Auth::user()->name }}!</p>
         @endauth
 
-        @guest
-            <p>Debes iniciar sesión para ver esto.</p>
-        @endguest
-
         <div class="mb-4 text-end">
             @auth
                 @if(Auth::user()->role === 'admin')
