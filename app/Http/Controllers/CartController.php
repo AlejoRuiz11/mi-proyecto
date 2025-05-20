@@ -15,13 +15,21 @@ class CartController extends Controller
         return view('cart', compact('cart'));
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
         $cart = session()->get('cart', []);
 
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'El carrito está vacío.');
         }
+
+        // Validar dirección
+        $request->validate([
+            'address' => 'required|string|max:255',
+        ]);
+
+        // Guardar la dirección temporalmente en sesión
+        session()->put('checkout_address', $request->address);
 
         foreach ($cart as $id => $item) {
             $product = Product::find($id);

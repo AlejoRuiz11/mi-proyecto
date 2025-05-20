@@ -58,6 +58,7 @@
                     <div class="card-body">
                         <p><strong>Nombre:</strong> <?= $order->user_name ?></p>
                         <p><strong>Correo:</strong> <?= $order->user_email ?></p>
+                        <p><strong>Dirección:</strong> <?= $order->address ?></p> <!-- Dirección añadida -->
                         <p><strong>Total:</strong> $<?= number_format($order->total, 2) ?></p>
                         <h4>Productos:</h4>
                         <ul>

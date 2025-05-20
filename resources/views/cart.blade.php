@@ -107,7 +107,12 @@
         @endphp
 
         <form action="{{ route('checkout') }}" method="POST">
-            @csrf            
+            @csrf
+            <div class="mb-3">
+                <label for="address" class="form-label fw-semibold">Dirección de envío</label>
+                <input type="text" name="address" id="address" class="form-control" required placeholder="Ej. Calle Falsa 123, Ciudad">
+            </div>
+            
             <button type="submit"
                 class="btn w-100 mt-4 {{ $hayProductos ? 'btn-success' : 'btn-secondary disabled' }}"
                 {{ $hayProductos ? '' : 'disabled' }}

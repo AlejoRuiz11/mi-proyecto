@@ -27,9 +27,14 @@ class OrderController extends Controller
     public function create()
     {
         $cart = session()->get('cart', []);
+        $address = session()->get('checkout_address');
 
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'El carrito está vacío.');
+        }
+
+        if (!$address) {
+            return redirect()->route('cart.index')->with('error', 'No se proporcionó dirección de envío.');
         }
 
         // Crear la orden
@@ -37,6 +42,7 @@ class OrderController extends Controller
         $order->user_id = Auth::id() ?? null;
         $order->user_name = Auth::user()->name ?? 'Invitado';
         $order->user_email = Auth::user()->email ?? 'invitado@ejemplo.com';
+        $order->address = $address;
         $order->total = 0; // Se actualizará más adelante
         $order->save();
 
@@ -59,11 +65,13 @@ class OrderController extends Controller
         $order->total = $total1;
         $order->save();
 
-        // Limpiar carrito (final)
+        // Limpiar carrito y dirección
         session()->forget('cart');
+        session()->forget('checkout_address');
 
         // Mostrar vista gracias por la compra
         return view('purchase', compact('order'));
     }
+
 
 }
